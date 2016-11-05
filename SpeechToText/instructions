@@ -1,0 +1,8 @@
+# First, install some key components:
+
+# <-- Install Xcode through App Store -->
+
+# command line:
+brew install sox
+brew install imagesnap
+
