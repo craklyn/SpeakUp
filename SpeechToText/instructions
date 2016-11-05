@@ -6,3 +6,28 @@
 brew install sox
 brew install imagesnap
 
+sudo xcodebuild -license accept
+brew install portaudio
+
+# Send wave file to server
+curl -X POST --form "file=@test.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1
+
+# Get result of speech->text
+curl -X GET https://api.havenondemand.com/1/ob/status/w-eu_d082d331-dfd6-46e5-bb2c-6d4a86a83f10?apikey=ab00903b-664d-4efa-9966-4c258c562145
+
+
+
+# Record sound at command line
+sox -d output.wav trim 0 5
+# Convert sound to 16-bit
+sox output.wav -b 16 output16bit.wav
+
+# Python script to break file into values
+import wave
+
+waveFile = wave.open('piano2.wav', 'r')
+length = waveFile.getnframes()
+for i in range(0,length):
+  waveData = waveFile.readframes(1)
+  data = map(ord, list(waveData))
+  print(int(data[0]))
