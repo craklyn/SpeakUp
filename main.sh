@@ -19,7 +19,7 @@ function textAnalysis {
 function record {
 	filename=$1
 	seconds=$2
-	rec $filename trim 0 $seconds &>/dev/null
+	sox -d $filename trim 0 $seconds &>/dev/null
 }
 
 # volume file.wav 
@@ -28,6 +28,17 @@ function volume {
 	file=$1
 	#python getVolume $file
 	echo [255,255,255,255]
+}
+
+# speechRate "sample string" timeInSeconds
+# output a word per min value 
+function speechRate {
+	string=$1
+	time=$2
+	numberOfWord=$( echo "$string" | tr ' ' '\n' | wc -l)
+	wordPerMin=$(( $numberOfWord * 60 / $time ))
+
+	echo $wordPerMin
 }
 
 # upload somedata
@@ -42,18 +53,6 @@ function upload {
 	echo "$speechRate" 
 	echo "$volume"
 }
-
-# speechRate "sample string" timeInSeconds
-# output a word per min value 
-function speechRate {
-	string=$1
-	time=$2
-	numberOfWord=$( echo "$string" | tr ' ' '\n' | wc -l)
-	wordPerMin=$(( $numberOfWord * 60 / $time ))
-
-	echo $wordPerMin
-}
-
 
 
 touch .on
