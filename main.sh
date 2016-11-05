@@ -41,6 +41,13 @@ function speechRate {
 	echo $wordPerMin
 }
 
+function timeNow {
+	dateTimeString=$(curl http://www.timeapi.org/utc/now 2>/dev/null) 
+	timeNow=$(echo $dateTimeString | cut -d 'T' -f2 | cut -d '+' -f1)
+	echo $timeNow
+}
+
+
 # upload somedata
 function upload {
 	text=$1
@@ -72,4 +79,6 @@ while [ -e .on ]; do
 	
 done &
 
-echo started, to kill, "rm .on"
+echo started, to kill, "rm .on" 
+echo "time now is" $(timeNow)
+echo 
