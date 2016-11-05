@@ -1,24 +1,24 @@
 #!/bin/bash
+#remove file .on to stop the script
 
 # speechToText file.wav
 function speechToText {
 	file=$1
 	outputText=$(echo 'curl')
-	echo $text
+	echo "speechToText: this is a test $outputText"
 }
 
 # textAnalysis "a long sting of text perhaps"
 function textAnalysis {
 	text=$1
 	output=$(echo 'curl someurl text')
-	echo $output
+	echo textAnalysis:$output
 }
 
 # record filename seconds; eg record sound.wav 30
 function record {
 	filename=$1
 	seconds=$2
-	echo "rec $filename 0 $seconds &>/dev/null"
 	rec $filename trim 0 $seconds &>/dev/null
 }
 
@@ -27,6 +27,7 @@ function record {
 function volume {
 	file=$1
 	#python getVolume $file
+	echo [255,255,255,255]
 }
 
 # upload somedata
@@ -36,7 +37,24 @@ function upload {
 	speechRate=$3
 	volume=$4
 	echo curl upload
+	echo "$text" 
+	echo "$speechMode" 
+	echo "$speechRate" 
+	echo "$volume"
 }
+
+# speechRate "sample string" timeInSeconds
+# output a word per min value 
+function speechRate {
+	string=$1
+	time=$2
+	numberOfWord=$( echo "$string" | tr ' ' '\n' | wc -l)
+	wordPerMin=$(( $numberOfWord * 60 / $time ))
+
+	echo $wordPerMin
+}
+
+
 
 touch .on
 while [ -e .on ]; do
@@ -45,11 +63,14 @@ while [ -e .on ]; do
 	record $wavFile $timer 
 
 	if [ -e $wavFile ]; then
-		text=$(speechToText $wavFile)
-		speechMode=$(textAnalysis "$text")
-		#speechRate
-		volume=$(volume $wavFile)
-		upload "$text" "$speechMode" "rate" "$volume"
+		speechText=$(speechToText $wavFile)
+		speechMode=$(textAnalysis "$speechText")
+		speechRate=$(speechRate "$speechText" $timer)
+		speechVolume=$(volume $wavFile)
+		
+		upload "$speechText" "$speechMode" "$speechRate" "$speechVolume"
 	fi &
 	
-done
+done &
+
+echo started, to kill, "rm .on"
