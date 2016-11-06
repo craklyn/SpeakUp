@@ -27,7 +27,7 @@ function speechToText {
 		sleep 5
 		curlResult=$(curl -X GET https://api.havenondemand.com/1/job/status/$jobId?apikey=$apikey 2>/dev/null)
 
-		echo $curlResult 1>&2 
+		#echo $curlResult 1>&2 
 		text=$(echo $curlResult | grep "content")
 
 		if [ $? -eq 0 ]; then
@@ -168,9 +168,9 @@ while [ -e .on ]; do
 	apikey=$(echo "$apikeysPool" | sed -n "$(( $userId * 2 + ( $count % 2 ) + 1 )) p" )
 	count=$(( $count + 1 ))
 	
-	if [ $count -gt 5 ]; then
-		break
-	fi
+	#if [ $count -gt 5 ]; then
+	#	break
+	#fi
 	timer=15
 	wavFile="speech_$RANDOM.wav"
 	startTime=$(timeNow)
