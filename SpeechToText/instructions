@@ -15,6 +15,8 @@ curl -X POST --form "file=@test.wav" --form "apikey=ab00903b-664d-4efa-9966-4c25
 # Get result of speech->text
 curl -X GET https://api.havenondemand.com/1/job/status/w-eu_d082d331-dfd6-46e5-bb2c-6d4a86a83f10?apikey=ab00903b-664d-4efa-9966-4c258c562145
 
+# Get sentiment of text
+curl -X GET "https://api.havenondemand.com/1/api/sync/analyzesentiment/v1?text=I%20like%20cats&apikey=ab00903b-664d-4efa-9966-4c258c562145"
 
 
 # Record sound at command line
