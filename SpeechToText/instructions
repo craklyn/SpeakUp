@@ -6,8 +6,14 @@
 brew install sox
 brew install imagesnap
 
-sudo xcodebuild -license accept
+# Might be necessary to do the following:
+# sudo xcodebuild -license accept
+
 brew install portaudio
+
+brew install homebrew/science/datamash
+
+
 
 # Send wave file to server
 curl -X POST --form "file=@test.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1
@@ -27,9 +33,29 @@ sox output.wav -b 16 output16bit.wav
 # Python script to break file into values
 import wave
 
-waveFile = wave.open('piano2.wav', 'r')
+waveFile = wave.open('output16bit.wav', 'r')
 length = waveFile.getnframes()
 for i in range(0,length):
   waveData = waveFile.readframes(1)
   data = map(ord, list(waveData))
   print(int(data[0]))
+
+
+# Write python script's output:
+python writeSound.py > temp.out
+
+# Find volume of sound.  Write out one volume estimate per 0.5 seconds.
+
+# This gives the stddev of the numbers in the first 0.5 seconds of the file.
+sed -n '1,22050 p' temp.out | datamash sstdev 1
+
+#!/bin/bash
+NLINES=(`wc -l temp.out`)
+HALFSECONDS=(`expr $NLINES / 22050`)
+
+for i in `seq 1 $HALFSECONDS`;
+do 
+  STARTLINE=$((1 + (i-1)*22050))
+  ENDLINE=$((i*22050))
+  sed -n "$STARTLINE,$ENDLINE p" temp.out | datamash sstdev 1 >> volumePerHalfSecond.txt
+done
