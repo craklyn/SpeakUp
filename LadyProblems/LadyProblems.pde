@@ -44,13 +44,12 @@ void setup() {
   bodyfont = loadFont("HelveticaNeue-13.vlw");
   displayfont = loadFont("HelveticaNeue-Bold-13.vlw");
   largefont = loadFont("HelveticaNeue-Bold-30.vlw");
-  
-
+  frameRate(4);
 }
 
 float volume = -1;
 int wordCount = -1;
-int timeSpeaking = -1;
+double timeSpeaking = 0.25;
 String lines[] = null;
 
 void draw() {
@@ -75,10 +74,12 @@ void draw() {
 //  text("Your volume is " + volume, margin, 120);
   drawVolume((int)volume);  
 
-  lines = loadStrings("micTime.txt");
-  if(lines.length > 0) {
-    timeSpeaking = 1 + (int)(Integer.parseInt(lines[0]) * 0.25);
-  }
+//  lines = loadStrings("micTime.txt");
+//  if(lines.length > 0) {
+//    timeSpeaking = 1 + (int)(Integer.parseInt(lines[0]) * 0.25);
+//  }
+  if((int)volume >= 3)
+    timeSpeaking += 0.25;
 //  text("Your time speaking is " + timeSpeaking + " seconds.", margin, 140);
 
   lines = loadStrings("wordCount.txt");
@@ -87,12 +88,12 @@ void draw() {
   }
 //  text("Your wordCount is " + wordCount, margin, 160);
 
-  float talkSpeed = 1.0 + (1.5 * wordCount / timeSpeaking);
+  double talkSpeed = 1.0 + (3.0 * wordCount / timeSpeaking);
   if(talkSpeed > 8.0)
     talkSpeed = 8.0;
   drawSpeed((int)talkSpeed);
 
-  drawTalkingTime(timeSpeaking);
+  drawTalkingTime((int)timeSpeaking);
   
   
 }
