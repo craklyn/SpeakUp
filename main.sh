@@ -81,7 +81,7 @@ function speechVolume {
 	sox $file -b 16 .output16bit.wav
 	python writeSound.py .output16bit.wav > .temp.out
 	#sed -n '1,22050 p' .temp.out | datamash sstdev 1
-	NLINES=$(echo $(wc -l temp.out) | cut -d' ' -f1)
+	NLINES=$(echo $(wc -l .temp.out) | cut -d' ' -f1)
 	QUARTERSECONDS=$(expr $(( $NLINES / 11025)))
 
 	#echo DEBUG: $QUARTERSECONDS 1>&2 
@@ -90,7 +90,7 @@ function speechVolume {
 	do 
 	  STARTLINE=$((1 + (i-1)*11025))
 	  ENDLINE=$((i*11025))
-	  stddev=$(sed -n "$STARTLINE,$ENDLINE p" temp.out | datamash sstdev 1)
+	  stddev=$(sed -n "$STARTLINE,$ENDLINE p" .temp.out | datamash sstdev 1)
 	  outputArray="$outputArray, $stddev"
 	  
 	  #echo $stddev >> .temp.txt
@@ -159,7 +159,7 @@ read username
 
 touch .on
 while [ -e .on ]; do
-	timer=15
+	timer=60
 	wavFile="speech_$RANDOM.wav"
 	startTime=$(timeNow)
 	echo debug: started recorded
@@ -168,15 +168,15 @@ while [ -e .on ]; do
 	endTime=$(timeNow)
 
 	if [ -e $wavFile ]; then
-		speechVolume=$(speechVolume $wavFile)
 		speechText=$(speechToText $wavFile)
+		speechVolume=$(speechVolume $wavFile)
 		speechSentiment=$(textAnalysis "$speechText")
 		speechRate=$(speechRate "$speechText" $timer)
 		
 		upload "$speechText" "$speechSentiment" "$speechRate" "$speechVolume" "$startTime" "$endTime" "$username"
 		rm $wavFile
 	fi &
-	
+	#break
 done &
 
 echo started, to kill, "rm .on" 
