@@ -65,31 +65,50 @@ function timeNow {
 
 # upload somedata
 function upload {
-	text=$1
-	speechMode=$2
+	serverAddress="https://r3rl24plha.execute-api.us-east-1.amazonaws.com/test/records"
+	textToken=$1
+	speechSentiment=$2
 	speechRate=$3
-	volume=$4
-	echo curl upload
-	echo "$text" 
-	echo "$speechMode" 
-	echo "$speechRate" 
-	echo "$volume"
+	speechVolume=$4
+	startTime=$5
+	endTime=$6
+	
+	username=$7
+	
+	jsonUserName="\"userName\":\"$username\""
+	jsonStartTime="\"startTime\":\"$startTime\""
+	jsonEndTime="\"endTime\":\"$endTime\""
+	jsonVolume="\"speechVolume\":[$speechVolume]"
+	jsonSentiment="\"sentiment\":\"$speechSentiment\""
+	jsonTextToken="\"textToken\":\"$textToken\""
+	
+	json="{ $jsonUserName, $jsonStartTime, $jsonEndTime, $jsonVolume, $jsonSentiment, $jsonTextToken}"
+	
+	echo debug: $json
+	echo
+
+ 	curl "$serverAddress" -X POST --data "$json"
 }
 
+#read user name into username
+echo enter username:
+read username
 
 touch .on
 while [ -e .on ]; do
 	timer=30
 	wavFile="speech.wav"
+	startTime=$(timeNow)
 	record $wavFile $timer 
+	endTime=$(timeNow)
 
 	if [ -e $wavFile ]; then
 		speechVolume=$(volume $wavFile)
 		speechText=$(speechToText $wavFile)
-		speechMode=$(textAnalysis "$speechText")
+		speechSentiment=$(textAnalysis "$speechText")
 		speechRate=$(speechRate "$speechText" $timer)
 		
-		upload "$speechText" "$speechMode" "$speechRate" "$speechVolume"
+		upload "$speechText" "$speechSentiment" "$speechRate" "$speechVolume" "$startTime" "$endTime" "$username"
 	fi &
 	
 done &
