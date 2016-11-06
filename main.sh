@@ -41,7 +41,7 @@ function record {
 function volume {
 	file=$1
 	#python getVolume $file
-	echo [255,255,255,255]
+	echo 255,255,255,255
 }
 
 # speechRate "sample string" timeInSeconds
@@ -75,6 +75,8 @@ function upload {
 	
 	username=$7
 	
+	jobID="$(openssl rand -base64 12)"
+	
 	jsonUserName="\"userName\":\"$username\""
 	jsonStartTime="\"startTime\":\"$startTime\""
 	jsonEndTime="\"endTime\":\"$endTime\""
@@ -82,7 +84,9 @@ function upload {
 	jsonSentiment="\"sentiment\":\"$speechSentiment\""
 	jsonTextToken="\"textToken\":\"$textToken\""
 	
-	json="{ $jsonUserName, $jsonStartTime, $jsonEndTime, $jsonVolume, $jsonSentiment, $jsonTextToken}"
+	jsonJobID="\"jobID\":\"$jobID\""
+	
+	json="{ $jsonUserName, $jsonStartTime, $jsonEndTime, $jsonVolume, $jsonSentiment, $jsonTextToken, $jsonJobID}"
 	
 	echo debug: $json
 	echo
