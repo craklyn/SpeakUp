@@ -90,7 +90,13 @@ imagesnap self.png
 TEMP=`curl -X POST http://api.havenondemand.com/1/api/sync/detectfaces/v1 --form "file=@self.png" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145"`
 
 WIDTH=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['width']"`
+WIDTH=$((WIDTH + 40))
 HEIGHT=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['height']"`
+HEIGHT=$((HEIGHT + 40))
 TOP=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['top']"`
+TOP=$((TOP - 20))
 LEFT=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['left']"`
+LEFT=$((LEFT - 20))
 convert self.png -crop $WIDTH'x'$HEIGHT'+'$LEFT'+'$TOP +repage faceCloseup.png
+
+
