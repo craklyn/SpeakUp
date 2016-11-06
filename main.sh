@@ -82,12 +82,13 @@ function record {
 # volume file.wav 
 # output an array of int(0-255), each represent the volume of the second
 function speechVolume {
+	name=$RANDOM
 	echo "starting speechVolume ($count)" 1>&2 
 	file=$1
-	sox $file -b 16 output16bit.wav
-	python writeSound.py output16bit.wav > .temp.out
+	sox $file -b 16 output16bit_$name.wav
+	python writeSound.py output16bit_$name.wav > .temp_$name.out
 	#sed -n '1,22050 p' .temp.out | datamash sstdev 1
-	NLINES=$(echo $(wc -l .temp.out) | cut -d' ' -f1)
+	NLINES=$(echo $(wc -l .temp_$name.out) | cut -d' ' -f1)
 	QUARTERSECONDS=$(expr $(( $NLINES / 11025)))
 
 	#echo DEBUG: $QUARTERSECONDS 1>&2 
@@ -96,13 +97,15 @@ function speechVolume {
 	do 
 	  STARTLINE=$((1 + (i-1)*11025))
 	  ENDLINE=$((i*11025))
-	  stddev=$(sed -n "$STARTLINE,$ENDLINE p" .temp.out | datamash sstdev 1)
+	  stddev=$(sed -n "$STARTLINE,$ENDLINE p" .temp_$name.out | datamash sstdev 1)
 	  outputArray="$outputArray, $stddev"
 	  
 	done
 	
 	#python getVolume $file
 
+	rm output16bit_$name.wav
+	rm .temp_$name.out
 	echo "ending speechVolume ($count)" 1>&2 
 	echo "$outputArray" | cut -d',' -f2- | sed 's/[ ,]*$//g'
 }
@@ -168,7 +171,7 @@ apikeysPool=$(echo $apikeysPool | tr ':' '\n')
 #echo enter username:
 #read username
 #change me
-userId=0
+userId=1
 count=0
 
 touch .on
@@ -179,14 +182,14 @@ touch wordsSaid.txt
 touch micVolume.txt
 touch micAll.txt
 while [ -e .on ]; do
-	apikey=$(echo "$apikeysPool" | sed -n "$(( $userId * 2 + ( $count % 2 ) + 1 )) p" )
+	apikey=$(echo "$apikeysPool" | sed -n "$(( $userId * 6 + ( $count % 6 ) + 1 )) p" )
 	count=$(( $count + 1 ))
 	
 	#break
-	if [ $count -gt 5 ]; then
-		break
-	fi
-	timer=15
+	#if [ $count -gt 5 ]; then
+	#	break
+	#fi
+	timer=10
 	wavFile="speech_$RANDOM.wav"
 	startTime=$(timeNow)
 	echo "debug: started recording $count"
