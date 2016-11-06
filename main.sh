@@ -1,16 +1,14 @@
 #!/bin/bash
 #remove file .on to stop the script
 
-apikey="ab00903b-664d-4efa-9966-4c258c562145"
+apikeysPool="4f9573f3-3488-4bb3-a83b-ff2ca590030b:07d4909b-f2a7-40ec-9534-75cd0237e8c4:e6e3103a-f5ea-457d-992f-df024fd90d5e:f8594837-5b82-4b0c-9716-c233015d6a39:ed60d868-1666-41c3-8fa2-f0f7c3152069:73df7388-c736-4731-b9d2-4aa9576ff701:dfe6e724-911e-4b4f-9df0-6dad1d712cf9:f4d8a28a-5857-49b5-8158-ea11580096fa:e874a5de-b18f-417c-aaee-3a7b3f6fa5da:221b0d20-187e-485c-af00-261ae94dc1c9:80306b71-caf9-45e4-b8fb-8780c8ec7f27:1cd0aa7e-883f-4791-a90d-3e9dabdf0f42"
 
-function debugLog {
-	echo $1 1>&2 
-}
+apikey="ab00903b-664d-4efa-9966-4c258c562145"
 
 
 # speechToText file.wav
 function speechToText {
-	echo speechToText 1>&2 
+	echo "starting speechToText $count" 1>&2 
 	file=$1
 	#curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 1>&2
 	#curl -X POST --form "file=@test.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1 2>/dev/null 
@@ -20,10 +18,10 @@ function speechToText {
 	jobId=$(echo $jobIdRaw | grep "jobID" | cut -d ':' -f2 | cut -d '"' -f'2' )
 	if [ "$jobId" == "" ]; then
 		echo "********* job ID is empty!!!" 1>&2 
-		echo  "$jobIdRaw" 1>&2 
-		echo "*******"  1>&2 
-		echo 1>&2 
-		rm .on
+		#echo  "$jobIdRaw" | tr '' 1>&2 
+		#echo "*******"  1>&2 
+		#echo 1>&2 
+		#rm .on
 	fi 
 	while [ -e .on ] && [ "$jobId" != "" ]; do
 		sleep 5
@@ -45,7 +43,7 @@ function speechToText {
 	done
 	
 	outputText=$(echo $text | sed 's/.*"content"//g' | cut -d'"' -f2)
-	echo "debug output:   $outputText" 1>&2 
+	echo "text To Speech result ($count): $outputText" 1>&2 
 	echo "$outputText"
 }
 
@@ -64,6 +62,8 @@ function textAnalysis {
 	fi
 
 	#curl -X GET "https://api.havenondemand.com/1/api/sync/analyzesentiment/v1?text=$text&apikey=ab00903b-664d-4efa-9966-4c258c562145"
+	echo "text Analysis result ($count): $score" 1>&2 
+	
 	echo $score
 }
 
@@ -77,6 +77,7 @@ function record {
 # volume file.wav 
 # output an array of int(0-255), each represent the volume of the second
 function speechVolume {
+	echo "starting speechVolume ($count)" 1>&2 
 	file=$1
 	sox $file -b 16 output16bit.wav
 	python writeSound.py output16bit.wav > .temp.out
@@ -93,13 +94,11 @@ function speechVolume {
 	  stddev=$(sed -n "$STARTLINE,$ENDLINE p" .temp.out | datamash sstdev 1)
 	  outputArray="$outputArray, $stddev"
 	  
-	  #echo $stddev >> .temp.txt
 	done
-
-	#(tr '\n' ' ' < .temp.txt) > volumePerQuarterSecond.txt 
-	
 	
 	#python getVolume $file
+
+	echo "ending speechVolume ($count)" 1>&2 
 	echo "$outputArray"
 }
 
@@ -147,19 +146,32 @@ function upload {
 	
 	json="{ $jsonUserName, $jsonStartTime, $jsonEndTime, $jsonVolume, $jsonSentiment, $jsonTextToken, $jsonJobID}"
 	
-	echo debug: $json
-	echo
+	#echo debug: $json
+	#echo
 
- 	#curl "$serverAddress" -X POST --data "$json"
+	# actually sending out the request
+ 	curl "$serverAddress" -X POST --data "$json"
 }
+
+
+apikeysPool=$(echo $apikeysPool | tr ':' '\n')
 
 #read user name into username
 echo enter username:
 read username
+#change me
+userId=0
+count=0
 
 touch .on
 while [ -e .on ]; do
-	timer=60
+	apikey=$(echo "$apikeysPool" | sed -n "$(( $userId * 2 + ( $count % 2 ) + 1 )) p" )
+	count=$(( $count + 1 ))
+	
+	if [ $count -gt 5 ]; then
+		break
+	fi
+	timer=15
 	wavFile="speech_$RANDOM.wav"
 	startTime=$(timeNow)
 	echo debug: started recorded
