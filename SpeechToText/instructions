@@ -76,3 +76,10 @@ rm temp.txt
 
 # Take a photo of the user
 imagesnap self.png
+curl -X POST http://api.havenondemand.com/1/api/sync/detectfaces/v1 --form "file=@self.png" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145"
+
+# Get this as a response to the curl post:
+# {"face":[{"left":512,"top":400,"width":278,"height":278}]}
+# Use that data to do the following:
+
+convert self.png -crop 278x278+512+400 +repage faceCloseup.png
