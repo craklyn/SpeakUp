@@ -49,6 +49,9 @@ void setup() {
 }
 
 float volume = -1;
+int wordCount = -1;
+int timeSpeaking = -1;
+String lines[] = null;
 
 void draw() {
   textFont(bodyfont);
@@ -63,7 +66,7 @@ void draw() {
   drawMeetingTitle();
   
   
-  String lines[] = loadStrings("volumeResults.txt");
+  lines = loadStrings("volumeResults.txt");
   if(lines.length > 0) {
     volume = Float.parseFloat(lines[0]);
     volume = 1.7*log(volume) - 7.0;
@@ -71,9 +74,25 @@ void draw() {
   
 //  text("Your volume is " + volume, margin, 120);
   drawVolume((int)volume);  
-  
-  drawSpeed(6);
-  drawTalkingTime();
+
+  lines = loadStrings("micTime.txt");
+  if(lines.length > 0) {
+    timeSpeaking = 1 + (int)(Integer.parseInt(lines[0]) * 0.25);
+  }
+//  text("Your time speaking is " + timeSpeaking + " seconds.", margin, 140);
+
+  lines = loadStrings("wordCount.txt");
+  if(lines.length > 0) {
+    wordCount = Integer.parseInt(lines[0]);
+  }
+//  text("Your wordCount is " + wordCount, margin, 160);
+
+  float talkSpeed = 1.0 + (1.5 * wordCount / timeSpeaking);
+  if(talkSpeed > 8.0)
+    talkSpeed = 8.0;
+  drawSpeed((int)talkSpeed);
+
+  drawTalkingTime(timeSpeaking);
   
   
 }
@@ -154,7 +173,7 @@ void drawSpeed(int speed) {
 
 }
 
-void drawTalkingTime() {
+void drawTalkingTime(int timeVal) {
   image(timeicon, margin+11, timey);
   fill(brand);
   text("Talking", margin, timey+46);
@@ -162,6 +181,6 @@ void drawTalkingTime() {
   textFont(largefont);
   fill(67,185,208);
   noStroke();
-  text("58%", columnTwo, timey+30);
+  text(timeVal + " seconds", columnTwo, timey+30);
 
 }
