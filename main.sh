@@ -4,15 +4,39 @@
 apikey="ab00903b-664d-4efa-9966-4c258c562145"
 # speechToText file.wav
 function speechToText {
+	echo speechToText 1>&2 
 	file=$1
-	
+	#curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 1>&2
+	#curl -X POST --form "file=@test.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1 2>/dev/null 
 	jobIdRaw=$(curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 2>/dev/null | grep "jobID" | cut -d ':' -f2)
+	#echo "DEBUG: jobid: $jobIdRaw" 1>&2 
+	#curl -X GET https://api.havenondemand.com/1/job/status/w-eu_591ca1d8-d092-4867-b2d6-683a610db318?apikey=ab00903b-664d-4efa-9966-4c258c562145
 	jobId=$(echo $jobIdRaw | cut -d '"' -f'2' )
-	while true; do
-		text=$(curl -X GET https://api.havenondemand.com/1/job/status/$jobId?apikey=$apikey 2>/dev/null | grep "content")
+	if [ "$jobId" == "" ]; then
+		echo "********* job ID is empty!!!" 1>&2 
+		curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 1>&2 
+		echo "(curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 2>/dev/null | grep "jobID" | cut -d ':' -f2)" 1>&2 
+		echo jobIdRaw: $jobIdRaw 1>&2 
+		echo jobId: $jobId 1>&2 
+		echo "*******"  1>&2 
+		echo 1>&2 
+		rm .on
+	fi 
+	while [ -e .on ]; do
+		sleep 2
+		curlResult=$(curl -X GET https://api.havenondemand.com/1/job/status/$jobId?apikey=$apikey 2>/dev/null)
+		text=$(echo $curlResult | grep "content")
 		if [ $? -eq 0 ]; then
 			break
 		fi
+		
+		# if error, break
+		echo curlResult | grep '"error"' >/dev/null
+		if [ $? -eq 0 ]; then
+			text=""
+			break
+		fi
+		echo $curlResult 1>&2 
 	done
 	
 	outputText=$(echo $text | cut -f4 -d'"')
@@ -38,10 +62,31 @@ function record {
     
 # volume file.wav 
 # output an array of int(0-255), each represent the volume of the second
-function volume {
+function speechVolume {
 	file=$1
+	sox $file -b 16 .output16bit.wav
+	python writeSound.py .output16bit.wav > .temp.out
+	#sed -n '1,22050 p' .temp.out | datamash sstdev 1
+	NLINES=$(echo $(wc -l temp.out) | cut -d' ' -f1)
+	QUARTERSECONDS=$(expr $(( $NLINES / 11025)))
+
+	#echo DEBUG: $QUARTERSECONDS 1>&2 
+	outputArray=""
+	for i in $(seq 1 $QUARTERSECONDS);
+	do 
+	  STARTLINE=$((1 + (i-1)*11025))
+	  ENDLINE=$((i*11025))
+	  stddev=$(sed -n "$STARTLINE,$ENDLINE p" temp.out | datamash sstdev 1)
+	  outputArray="$outputArray, $stddev"
+	  
+	  #echo $stddev >> .temp.txt
+	done
+
+	#(tr '\n' ' ' < .temp.txt) > volumePerQuarterSecond.txt 
+	
+	
 	#python getVolume $file
-	echo 255,255,255,255
+	echo "$outputArray"
 }
 
 # speechRate "sample string" timeInSeconds
@@ -91,7 +136,7 @@ function upload {
 	echo debug: $json
 	echo
 
- 	curl "$serverAddress" -X POST --data "$json"
+ 	#curl "$serverAddress" -X POST --data "$json"
 }
 
 #read user name into username
@@ -100,21 +145,25 @@ read username
 
 touch .on
 while [ -e .on ]; do
-	timer=30
-	wavFile="speech.wav"
+	timer=15
+	wavFile="speech_$RANDOM.wav"
 	startTime=$(timeNow)
+	echo debug: started recorded
 	record $wavFile $timer 
+	echo debug: ended recorded
 	endTime=$(timeNow)
 
 	if [ -e $wavFile ]; then
-		speechVolume=$(volume $wavFile)
+		#speechVolume=$(speechVolume $wavFile)
 		speechText=$(speechToText $wavFile)
 		speechSentiment=$(textAnalysis "$speechText")
 		speechRate=$(speechRate "$speechText" $timer)
 		
 		upload "$speechText" "$speechSentiment" "$speechRate" "$speechVolume" "$startTime" "$endTime" "$username"
+		rm $wavFile
 	fi &
 	
+	break
 done &
 
 echo started, to kill, "rm .on" 
