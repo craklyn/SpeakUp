@@ -212,7 +212,7 @@ while [ -e .on ]; do
 		
 		
 		echo $speechVolume | tr ',' '\n' | sed 's/ //g' | while read line; do
-			th=1000
+			th=600
 			currentVol=$( echo $line | cut -d'.' -f1 )
 			if [ $currentVol -gt $th ]; then
 				echo $line >> micVolume.txt
