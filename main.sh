@@ -2,44 +2,50 @@
 #remove file .on to stop the script
 
 apikey="ab00903b-664d-4efa-9966-4c258c562145"
+
+function debugLog {
+	echo $1 1>&2 
+}
+
+
 # speechToText file.wav
 function speechToText {
 	echo speechToText 1>&2 
 	file=$1
 	#curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 1>&2
 	#curl -X POST --form "file=@test.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1 2>/dev/null 
-	jobIdRaw=$(curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 2>/dev/null | grep "jobID" | cut -d ':' -f2)
-	#echo "DEBUG: jobid: $jobIdRaw" 1>&2 
 	#curl -X GET https://api.havenondemand.com/1/job/status/w-eu_591ca1d8-d092-4867-b2d6-683a610db318?apikey=ab00903b-664d-4efa-9966-4c258c562145
-	jobId=$(echo $jobIdRaw | cut -d '"' -f'2' )
+	jobIdRaw=$(curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 2>/dev/null)
+
+	jobId=$(echo $jobIdRaw | grep "jobID" | cut -d ':' -f2 | cut -d '"' -f'2' )
 	if [ "$jobId" == "" ]; then
 		echo "********* job ID is empty!!!" 1>&2 
-		curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 1>&2 
-		echo "(curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 2>/dev/null | grep "jobID" | cut -d ':' -f2)" 1>&2 
-		echo jobIdRaw: $jobIdRaw 1>&2 
-		echo jobId: $jobId 1>&2 
+		echo  "$jobIdRaw" 1>&2 
 		echo "*******"  1>&2 
 		echo 1>&2 
 		rm .on
 	fi 
-	while [ -e .on ]; do
-		sleep 2
+	while [ -e .on ] && [ "$jobId" != "" ]; do
+		sleep 5
 		curlResult=$(curl -X GET https://api.havenondemand.com/1/job/status/$jobId?apikey=$apikey 2>/dev/null)
+
+		echo $curlResult 1>&2 
 		text=$(echo $curlResult | grep "content")
+
 		if [ $? -eq 0 ]; then
 			break
 		fi
 		
 		# if error, break
-		echo curlResult | grep '"error"' >/dev/null
+		echo $curlResult | grep '"error"' >/dev/null
 		if [ $? -eq 0 ]; then
 			text=""
 			break
 		fi
-		echo $curlResult 1>&2 
 	done
 	
-	outputText=$(echo $text | cut -f4 -d'"')
+	outputText=$(echo $text | sed 's/.*"content"//g' | cut -d'"' -f2)
+	echo "debug output:   $outputText" 1>&2 
 	echo "$outputText"
 }
 
@@ -48,8 +54,16 @@ function speechToText {
 function textAnalysis {
 	text=$( echo $1 | sed 's/ /%20/g' | sed 's/[<>\/\\]/%20/g' )
 	
-	score=$(curl -X GET "https://api.havenondemand.com/1/api/sync/analyzesentiment/v1?text=$text&apikey=$apikey" 2>/dev/null | sed 's/.*aggregate//g' | cut -d ',' -f2 | cut -d'}' -f1 | cut -d':' -f2)
+	jsonResult=$(curl -X GET "https://api.havenondemand.com/1/api/sync/analyzesentiment/v1?text=$text&apikey=$apikey" 2>/dev/null)
+	
+	echo "$jsonResult" | grep '"error"' > /dev/null
+	if [ $? -eq 0 ]; then 
+		score=0
+	else
+		score=$(echo "$jsonResult" | sed 's/.*aggregate//g' | cut -d ',' -f2 | cut -d'}' -f1 | cut -d':' -f2)
+	fi
 
+	#curl -X GET "https://api.havenondemand.com/1/api/sync/analyzesentiment/v1?text=$text&apikey=ab00903b-664d-4efa-9966-4c258c562145"
 	echo $score
 }
 
@@ -154,7 +168,7 @@ while [ -e .on ]; do
 	endTime=$(timeNow)
 
 	if [ -e $wavFile ]; then
-		#speechVolume=$(speechVolume $wavFile)
+		speechVolume=$(speechVolume $wavFile)
 		speechText=$(speechToText $wavFile)
 		speechSentiment=$(textAnalysis "$speechText")
 		speechRate=$(speechRate "$speechText" $timer)
@@ -163,7 +177,6 @@ while [ -e .on ]; do
 		rm $wavFile
 	fi &
 	
-	break
 done &
 
 echo started, to kill, "rm .on" 
