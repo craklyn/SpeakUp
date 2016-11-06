@@ -56,6 +56,8 @@ function textAnalysis {
 	
 	echo "$jsonResult" | grep '"error"' > /dev/null
 	if [ $? -eq 0 ]; then 
+		echo "debug text $text" 1>&2 
+		echo "debug api key $apikey" 1>&2 
 		score=0
 	else
 		score=$(echo "$jsonResult" | sed 's/.*aggregate//g' | cut -d ',' -f2 | cut -d'}' -f1 | cut -d':' -f2)
@@ -99,7 +101,7 @@ function speechVolume {
 	#python getVolume $file
 
 	echo "ending speechVolume ($count)" 1>&2 
-	echo "$outputArray"
+	echo "$outputArray" | cut -d',' -f2-
 }
 
 # speechRate "sample string" timeInSeconds
@@ -146,7 +148,7 @@ function upload {
 	
 	json="{ $jsonUserName, $jsonStartTime, $jsonEndTime, $jsonVolume, $jsonSentiment, $jsonTextToken, $jsonJobID}"
 	
-	#echo debug: $json
+	#echo debug json to send: $json
 	#echo
 
 	# actually sending out the request
