@@ -10,6 +10,7 @@ brew install imagesnap
 # http://iharder.sourceforge.net/current/macosx/imagesnap/
 # Then, copy it to the following location:
 # cp ~/Downloads/ImageSnap-v0.2.5/imagesnap /usr/local/bin/.
+brew install imagemagick
 
 
 # Might be necessary to do the following:
@@ -57,16 +58,21 @@ sed -n '1,22050 p' temp.out | datamash sstdev 1
 
 #!/bin/bash
 NLINES=(`wc -l temp.out`)
-HALFSECONDS=(`expr $NLINES / 22050`)
+QUARTERSECONDS=(`expr $NLINES / 11025`)
 
-for i in `seq 1 $HALFSECONDS`;
+for i in `seq 1 $QUARTERSECONDS`;
 do 
-  STARTLINE=$((1 + (i-1)*22050))
-  ENDLINE=$((i*22050))
+  STARTLINE=$((1 + (i-1)*11025))
+  ENDLINE=$((i*11025))
   stddev=(`sed -n "$STARTLINE,$ENDLINE p" temp.out | datamash sstdev 1`)
   stddev="$stddev,"
   echo $stddev >> temp.txt
 done
 
-(tr '\n' ' ' < temp.txt) > volumePerHalfSecond.txt 
+(tr '\n' ' ' < temp.txt) > volumePerQuarterSecond.txt 
 rm temp.txt
+
+
+
+# Take a photo of the user
+imagesnap self.png
