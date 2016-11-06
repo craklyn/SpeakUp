@@ -1,18 +1,32 @@
 #!/bin/bash
 #remove file .on to stop the script
 
+apikey="ab00903b-664d-4efa-9966-4c258c562145"
 # speechToText file.wav
 function speechToText {
 	file=$1
-	outputText=$(echo 'curl')
-	echo "speechToText: this is a test $outputText"
+	
+	jobIdRaw=$(curl -X POST --form "file=@$file" --form "apikey=$apikey" https://api.havenondemand.com/1/api/async/recognizespeech/v1 2>/dev/null | grep "jobID" | cut -d ':' -f2)
+	jobId=$(echo $jobIdRaw | cut -d '"' -f'2' )
+	while true; do
+		text=$(curl -X GET https://api.havenondemand.com/1/job/status/$jobId?apikey=$apikey 2>/dev/null | grep "content")
+		if [ $? -eq 0 ]; then
+			break
+		fi
+	done
+	
+	outputText=$(echo $text | cut -f4 -d'"')
+	echo "$outputText"
 }
 
 # textAnalysis "a long sting of text perhaps"
+# -1 to 1
 function textAnalysis {
-	text=$1
-	output=$(echo 'curl someurl text')
-	echo textAnalysis:$output
+	text=$( echo $1 | sed 's/ /%20/g' | sed 's/[<>\/\\]/%20/g' )
+	
+	score=$(curl -X GET "https://api.havenondemand.com/1/api/sync/analyzesentiment/v1?text=$text&apikey=$apikey" 2>/dev/null | sed 's/.*aggregate//g' | cut -d ',' -f2 | cut -d'}' -f1 | cut -d':' -f2)
+
+	echo $score
 }
 
 # record filename seconds; eg record sound.wav 30
@@ -21,7 +35,7 @@ function record {
 	seconds=$2
 	sox -d $filename trim 0 $seconds &>/dev/null
 }
-
+    
 # volume file.wav 
 # output an array of int(0-255), each represent the volume of the second
 function volume {
@@ -43,7 +57,8 @@ function speechRate {
 
 function timeNow {
 	dateTimeString=$(curl http://www.timeapi.org/utc/now 2>/dev/null) 
-	timeNow=$(echo $dateTimeString | cut -d 'T' -f2 | cut -d '+' -f1)
+	timeNow=$(echo $dateTimeString | tr 'T' ' ' | cut -d '+' -f1)
+	
 	echo $timeNow
 }
 
@@ -64,15 +79,15 @@ function upload {
 
 touch .on
 while [ -e .on ]; do
-	timer=5
+	timer=30
 	wavFile="speech.wav"
 	record $wavFile $timer 
 
 	if [ -e $wavFile ]; then
+		speechVolume=$(volume $wavFile)
 		speechText=$(speechToText $wavFile)
 		speechMode=$(textAnalysis "$speechText")
 		speechRate=$(speechRate "$speechText" $timer)
-		speechVolume=$(volume $wavFile)
 		
 		upload "$speechText" "$speechMode" "$speechRate" "$speechVolume"
 	fi &
