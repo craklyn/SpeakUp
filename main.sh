@@ -54,10 +54,13 @@ function textAnalysis {
 	
 	jsonResult=$(curl -X GET "https://api.havenondemand.com/1/api/sync/analyzesentiment/v1?text=$text&apikey=$apikey" 2>/dev/null)
 	
+
+	echo "debug text $text" 1>&2 
+	echo "debug api key $apikey" 1>&2 
+	echo "debug jsonResult $jsonResult"
+	
 	echo "$jsonResult" | grep '"error"' > /dev/null
 	if [ $? -eq 0 ]; then 
-		echo "debug text $text" 1>&2 
-		echo "debug api key $apikey" 1>&2 
 		score=0
 	else
 		score=$(echo "$jsonResult" | sed 's/.*aggregate//g' | cut -d ',' -f2 | cut -d'}' -f1 | cut -d':' -f2)
@@ -153,26 +156,32 @@ function upload {
 
 	# actually sending out the request
  	curl "$serverAddress" -X POST --data "$json"
+	
+	#curl "https://r3rl24plha.execute-api.us-east-1.amazonaws.com/test/records" -X POST --data '{ "userName":"Kyle", "startTime":"2016-11-06 19:10:06", "endTime":"2016-11-06 19:10:21", "speechVolume":[ 742.74023151452, 1052.8724434048, 1368.1678977123, 1471.5171898344, 660.61758403054, 378.8484040583, 1028.8571613397, 432.39608033396, 71.468110690365, 461.17551592886, 187.27400463265, 188.71034860925, 1384.0271606744, 472.88485885089, 657.2478713472, 62.640429702527, 44.803614068124, 311.00176934837, 662.83107022778, 252.15985154048, 42.190253481325, 30.782603403563, 27.690060779129, 28.447454404775, 27.797645583109, 26.467696458392, 275.29331873992, 494.75239255643, 706.3260797411, 678.87443163902, 712.75369215112, 500.85662126828, 514.59081005462, 531.70673336901, 93.347073522959, 41.231100549282, 169.66216197676, 544.44418409903, 46.371761316453, 386.60853593992, 792.4114139759, 608.27978157301, 105.17918837618, 440.01595235117, 463.49119684077, 205.07185715928, 448.70636563535, 72.006988428065, 49.05443614954, 384.71119164335, 957.13161106652, 766.00861781557, 387.91494779553, 289.42692606843, 154.66007310612, 101.39763616629, 103.11419507329, 1143.961719542, 351.5233383938, 208.20572785655], "sentiment":"0.6", "textToken":"it just to say that this is the centuries it I have any actual lessons yet", "jobID":"d0yvUiFjy+Wflkjsdzklfjklaj"}'
+	
 }
 
 
 apikeysPool=$(echo $apikeysPool | tr ':' '\n')
 
 #read user name into username
-echo enter username:
-read username
+#echo enter username:
+#read username
 #change me
 userId=0
 count=0
 
 touch .on
+rm wordsSaid.txt
+rm micVolume.txt
 while [ -e .on ]; do
 	apikey=$(echo "$apikeysPool" | sed -n "$(( $userId * 2 + ( $count % 2 ) + 1 )) p" )
 	count=$(( $count + 1 ))
 	
-	#if [ $count -gt 5 ]; then
-	#	break
-	#fi
+	#break
+	if [ $count -gt 5 ]; then
+		break
+	fi
 	timer=15
 	wavFile="speech_$RANDOM.wav"
 	startTime=$(timeNow)
@@ -184,10 +193,15 @@ while [ -e .on ]; do
 	if [ -e $wavFile ]; then
 		speechText=$(speechToText $wavFile)
 		speechVolume=$(speechVolume $wavFile)
-		speechSentiment=$(textAnalysis "$speechText")
-		speechRate=$(speechRate "$speechText" $timer)
+		#echo debug $speechText
 		
-		upload "$speechText" "$speechSentiment" "$speechRate" "$speechVolume" "$startTime" "$endTime" "$username"
+		#speechSentiment=$(textAnalysis "$speechText")
+		#speechRate=$(speechRate "$speechText" $timer)
+		
+		#upload "$speechText" "$speechSentiment" "$speechRate" "$speechVolume" "$startTime" "$endTime" "$username"
+		
+		echo $speechText | tr ' ' '\n' >> wordsSaid.txt
+		echo $speechVolume | tr ',' '\n' | sed 's/ //g' >> micVolume.txt
 		rm $wavFile
 	fi &
 	#break
