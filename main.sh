@@ -101,7 +101,7 @@ function speechVolume {
 	#python getVolume $file
 
 	echo "ending speechVolume ($count)" 1>&2 
-	echo "$outputArray" | cut -d',' -f2-
+	echo "$outputArray" | cut -d',' -f2- | sed 's/[ ,]*$//g'
 }
 
 # speechRate "sample string" timeInSeconds
@@ -148,8 +148,8 @@ function upload {
 	
 	json="{ $jsonUserName, $jsonStartTime, $jsonEndTime, $jsonVolume, $jsonSentiment, $jsonTextToken, $jsonJobID}"
 	
-	#echo debug json to send: $json
-	#echo
+	echo debug json to send: $json
+	echo
 
 	# actually sending out the request
  	curl "$serverAddress" -X POST --data "$json"
@@ -176,9 +176,9 @@ while [ -e .on ]; do
 	timer=15
 	wavFile="speech_$RANDOM.wav"
 	startTime=$(timeNow)
-	echo debug: started recorded
+	echo "debug: started recording $count"
 	record $wavFile $timer 
-	echo debug: ended recorded
+	echo "debug: ended recording $count"
 	endTime=$(timeNow)
 
 	if [ -e $wavFile ]; then
