@@ -174,6 +174,10 @@ count=0
 touch .on
 rm wordsSaid.txt
 rm micVolume.txt
+rm micAll.txt
+touch wordsSaid.txt
+touch micVolume.txt
+touch micAll.txt
 while [ -e .on ]; do
 	apikey=$(echo "$apikeysPool" | sed -n "$(( $userId * 2 + ( $count % 2 ) + 1 )) p" )
 	count=$(( $count + 1 ))
@@ -201,7 +205,18 @@ while [ -e .on ]; do
 		#upload "$speechText" "$speechSentiment" "$speechRate" "$speechVolume" "$startTime" "$endTime" "$username"
 		
 		echo $speechText | tr ' ' '\n' >> wordsSaid.txt
-		echo $speechVolume | tr ',' '\n' | sed 's/ //g' >> micVolume.txt
+		echo $speechVolume | tr ',' '\n' | sed 's/ //g' >> micAll.txt
+		
+		
+		echo $speechVolume | tr ',' '\n' | sed 's/ //g' | while read line; do
+			th=1000
+			currentVol=$( echo $line | cut -d'.' -f1 )
+			if [ $currentVol -gt $th ]; then
+				echo $line >> micVolume.txt
+			fi
+			
+		done
+		
 		rm $wavFile
 	fi &
 	#break
