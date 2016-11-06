@@ -83,3 +83,14 @@ curl -X POST http://api.havenondemand.com/1/api/sync/detectfaces/v1 --form "file
 # Use that data to do the following:
 
 convert self.png -crop 278x278+512+400 +repage faceCloseup.png
+
+
+# Okay, automating it:
+imagesnap self.png
+TEMP=`curl -X POST http://api.havenondemand.com/1/api/sync/detectfaces/v1 --form "file=@self.png" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145"`
+
+WIDTH=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['width']"`
+HEIGHT=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['height']"`
+TOP=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['top']"`
+LEFT=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['left']"`
+convert self.png -crop $WIDTH'x'$HEIGHT'+'$LEFT'+'$TOP +repage faceCloseup.png
