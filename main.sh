@@ -78,8 +78,8 @@ function record {
 # output an array of int(0-255), each represent the volume of the second
 function speechVolume {
 	file=$1
-	sox $file -b 16 .output16bit.wav
-	python writeSound.py .output16bit.wav > .temp.out
+	sox $file -b 16 output16bit.wav
+	python writeSound.py output16bit.wav > .temp.out
 	#sed -n '1,22050 p' .temp.out | datamash sstdev 1
 	NLINES=$(echo $(wc -l .temp.out) | cut -d' ' -f1)
 	QUARTERSECONDS=$(expr $(( $NLINES / 11025)))
