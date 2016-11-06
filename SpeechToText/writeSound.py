@@ -7,6 +7,6 @@ for i in range(0,length):
   waveData = waveFile.readframes(1)
   data = struct.unpack("<hh", waveData)
   print(int(data[0]))
-  print(int(data[1]))
+#  print(int(data[1]))
 
 
