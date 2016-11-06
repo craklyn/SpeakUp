@@ -4,7 +4,13 @@
 
 # command line:
 brew install sox
+
 brew install imagesnap
+# If imagesnap fails to install correctly, download from here:
+# http://iharder.sourceforge.net/current/macosx/imagesnap/
+# Then, copy it to the following location:
+# cp ~/Downloads/ImageSnap-v0.2.5/imagesnap /usr/local/bin/.
+
 
 # Might be necessary to do the following:
 # sudo xcodebuild -license accept
