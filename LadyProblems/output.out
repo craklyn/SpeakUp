@@ -1,0 +1,228 @@
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [!=====|=====!] Hd:0.0 Clip:464  In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [!=====|=====!] Hd:0.0 Clip:1.12kIn:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [!=====|=====!] Hd:0.0 Clip:1.45k
+sox WARN sox: `coreaudio' input clipped 1454 samples
+Done.
+sox WARN dither: dither clipped 1237 samples; decrease volume?
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [   ===|===   ]        Clip:228  In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [!=====|=====!] Hd:0.0 Clip:312  In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ] Hd:0.0 Clip:312  
+sox WARN sox: `coreaudio' input clipped 312 samples
+Done.
+sox WARN dither: dither clipped 278 samples; decrease volume?
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [!=====|=====!] Hd:0.0 Clip:332  In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [!=====|=====!] Hd:0.0 Clip:770  In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ] Hd:0.0 Clip:770  
+sox WARN sox: `coreaudio' input clipped 770 samples
+Done.
+sox WARN dither: dither clipped 661 samples; decrease volume?
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [   -==|==-   ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.14 [00:00:00.00] Out:5.12k [      |      ]        Clip:0    
+Aborted.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.16 [00:00:00.00] Out:6.14k [      |      ]        Clip:0    
+Aborted.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.02 [00:00:00.00] Out:0     [      |      ]        Clip:0    
+Aborted.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    
+Aborted.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.02 [00:00:00.00] Out:0     [      |      ]        Clip:0    
+Aborted.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.02 [00:00:00.00] Out:0     [      |      ]        Clip:0    
+Aborted.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.09 [00:00:00.00] Out:3.07k [      |      ]        Clip:0    
+Aborted.
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.12 [00:00:00.00] Out:4.10k [      |      ]        Clip:0    In:0.00% 00:00:00.23 [00:00:00.00] Out:9.22k [      |      ]        Clip:0    In:0.00% 00:00:00.26 [00:00:00.00] Out:11.0k [      |      ]        Clip:0    
+Done.
+Traceback (most recent call last):
+  File "processingWriteSound.py", line 7, in <module>
+    waveData = waveFile.readframes(1)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/wave.py", line 256, in readframes
+    data = self._data_chunk.read(nframes * self._framesize)
+KeyboardInterrupt
+
+Input File     : 'default' (coreaudio)
+Channels       : 2
+Sample Rate    : 44100
+Precision      : 32-bit
+Sample Encoding: 32-bit Signed Integer PCM
+
+In:0.00% 00:00:00.00 [00:00:00.00] Out:0     [      |      ]        Clip:0    In:0.00% 00:00:00.02 [00:00:00.00] Out:0     [      |      ]        Clip:0    
+Aborted.

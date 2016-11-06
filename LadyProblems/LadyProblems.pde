@@ -66,9 +66,10 @@ void draw() {
   String lines[] = loadStrings("volumeResults.txt");
   if(lines.length > 0) {
     volume = Float.parseFloat(lines[0]);
-    volume = 1.2*log(volume) - 3.5;
+    volume = 1.7*log(volume) - 7.0;
   }
   
+//  text("Your volume is " + volume, margin, 120);
   drawVolume((int)volume);  
   
   drawSpeed(6);
