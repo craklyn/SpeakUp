@@ -1,5 +1,6 @@
 # To run:
 # source makeSound.sh  > output.out 2>&1
+# source makeSound.sh > /dev/null 2>&1
 
 THRESHOLD_VALUE=0.2
 
