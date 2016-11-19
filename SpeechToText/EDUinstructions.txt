@@ -1,0 +1,2 @@
+curl -X POST --form "file=@brownfox.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1
+
