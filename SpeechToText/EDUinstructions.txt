@@ -1,2 +1,17 @@
-curl -X POST --form "file=@brownfox.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1
+# record brownfox.wav:
+# sox -d brownfox.wav trim 0 5
+# play brownfox.wav:
+play brownfox.wav
+
+TEMP=`curl -X POST --form "file=@brownfox.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1`
+JOBID=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['jobID']"`
+
+echo "Sleeping for 10 seconds, then retrieving results from server."
+sleep 10
+
+TEMP=`curl -X GET "https://api.havenondemand.com/1/job/status/"$JOBID"?apikey=ab00903b-664d-4efa-9966-4c258c562145"`
+SPEECHTEXT=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['actions'][0]['result']['document'][0]['content']"`
+echo $SPEECHTEXT | say 
+
+
 
