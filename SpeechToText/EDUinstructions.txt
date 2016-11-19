@@ -1,17 +1,52 @@
 # record brownfox.wav:
 # sox -d brownfox.wav trim 0 5
 # play brownfox.wav:
-play brownfox.wav
 
+#play daclub2.wav
+#TEMP=`curl -X POST --form "file=@daclub2.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1`
+
+#play daclub.wav
+#TEMP=`curl -X POST --form "file=@daclub.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1`
+
+#play cheerios.wav
+#TEMP=`curl -X POST --form "file=@cheerios.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1`
+
+play brownfox.wav
 TEMP=`curl -X POST --form "file=@brownfox.wav" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145" https://api.havenondemand.com/1/api/async/recognizespeech/v1`
 JOBID=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['jobID']"`
 
-echo "Sleeping for 10 seconds, then retrieving results from server."
-sleep 10
+echo "Sleeping for 20 seconds, then retrieving results from server."
+sleep 20
 
 TEMP=`curl -X GET "https://api.havenondemand.com/1/job/status/"$JOBID"?apikey=ab00903b-664d-4efa-9966-4c258c562145"`
+echo "Received the following text result:"
+echo $TEMP
 SPEECHTEXT=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['actions'][0]['result']['document'][0]['content']"`
 echo $SPEECHTEXT | say 
 
 
+echo "Okay, now let's determine the sentiment of the words."
+
+SPEECHTEXTFORURL=${SPEECHTEXT// /%20}
+
+curl -X GET "https://api.havenondemand.com/1/api/sync/analyzesentiment/v1?text="$SPEECHTEXTFORURL"&apikey=ab00903b-664d-4efa-9966-4c258c562145" | python -mjson.tool
+
+
+
+echo "Let's take a photo and find a face!"
+
+imagesnap self.png
+open /Applications/Preview.app/ self.png 
+TEMP=`curl -X POST http://api.havenondemand.com/1/api/sync/detectfaces/v1 --form "file=@self.png" --form "apikey=ab00903b-664d-4efa-9966-4c258c562145"`
+
+WIDTH=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['width']"`
+WIDTH=$((WIDTH + 40))
+HEIGHT=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['height']"`
+HEIGHT=$((HEIGHT + 40))
+TOP=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['top']"`
+TOP=$((TOP - 20))
+LEFT=`echo $TEMP | python -c "import sys, json; print json.load(sys.stdin)['face'][0]['left']"`
+LEFT=$((LEFT - 20))
+convert self.png -crop $WIDTH'x'$HEIGHT'+'$LEFT'+'$TOP +repage faceCloseup.png
+open /Applications/Preview.app/ faceCloseup.png 
 
